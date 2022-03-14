@@ -1,0 +1,40 @@
+#cards{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: stretch;
+
+}
+/* .card-body{
+    padding-top: 2.25rem;
+} */
+#cards-add{
+    border: 0.8px dashed rgb(66, 66, 66);
+    outline: 0;
+}
+#cards-add:hover{
+    background-color: #037bff;
+    color: white;
+}
+#card-icon{
+    font-size: 1.8em;
+    margin-top: 3vh;
+}
+#category-card:hover{
+    background-color: #037bff;
+    color: white;
+}
+
+#categoriesdropdown{
+    background-color: white;
+    width: 100%;
+    text-align: left;
+}
+
+select{
+    width: 100%;
+    padding: 0.5rem;
+    border: 0.6px solid rgb(182, 182, 182);
+    border-radius: 5px;
+}

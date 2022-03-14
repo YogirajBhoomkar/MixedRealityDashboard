@@ -1,0 +1,8 @@
+#profile-btn:focus {
+   outline: none !important;
+   box-shadow: none !important;
+  
+}
+#profile-btn{
+    border-radius: 50%;
+}

@@ -1,0 +1,76 @@
+#backButton {
+  text-decoration: none;
+  display: inline-block;
+  padding: 8px 16px;
+  border: none;
+  outline: none;
+}
+#backButton:hover{
+    background-color: #037bff;
+    color: white;
+}
+.previous {
+  background-color: #f1f1f1;
+  color: black;
+}
+.round {
+  border-radius: 50%;
+}
+
+.image-upload{
+    display: block;
+    visibility: hidden;
+    width: 0;
+    height: 0;
+}
+td{
+  border-top: none !important;
+}
+a:hover{
+  color:white !important;
+  background-color: #037bff !important;
+
+}
+textarea {
+   resize: none;
+}
+/* tr td{
+  border: 1px solid black;
+} */
+.image-upload{
+  content: "\f087"; 
+  font-family: FontAwesome;
+  font-style: normal;
+  font-weight: normal;
+  text-decoration: inherit;
+  position: absolute;
+  font-size: 400px;
+  color: lightblue;
+  top: 50%;
+  left: 50%;
+}
+
+input[type=file]{
+  width:100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.video-input{
+ opacity: 1; 
+}
+.carousel-indicators{
+  color: #037bff !important;
+}
+
+.carousel-inner{
+  height: 200px !important;
+}
+
+td{
+  width:48% !important;
+}
+
+#preview-td{
+  width: 100% !important;
+}
