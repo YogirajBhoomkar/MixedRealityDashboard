@@ -13,6 +13,7 @@ export default class CategoryProducts extends Component {
       items: [],
       search_product_name: "",
       "add-details-category-id": 0,
+      "details-added-count":0,
       "selected_category_name": "category name should come here",
 
       "add-product-name": "Your Product Name.",
@@ -39,7 +40,7 @@ export default class CategoryProducts extends Component {
 
   }
   componentDidMount() {
-    
+
     this.setState({
       selected_category_name: this.props.selected_category_name,
     })
@@ -107,7 +108,7 @@ export default class CategoryProducts extends Component {
     document.getElementById("audio").setAttribute("src", "");
   }
   post_data_to_server() {
-    var thisRef=this;
+    var thisRef = this;
     var category_name = this.state["selected_category_name"]
     var product_name = this.state["add-product-name"]
     var product_description = this.state["add-product-text-description"]
@@ -135,7 +136,7 @@ export default class CategoryProducts extends Component {
     formData.append("Video", product_video)
     formData.append("Audio", product_audio)
 
-   
+
     axios({
       method: "POST",
       url: process.env.REACT_APP_ADD_PRODUCT_DATA_POST_URL + "/api/uploaddata/data",
@@ -143,7 +144,7 @@ export default class CategoryProducts extends Component {
       headers: {
         "Content-Type": "multipart/form-data"
       }
-    }).then(resp=>{
+    }).then(resp => {
       if (resp.status == 200) {
         thisRef.get_updated_list_of_items_from_server();
       }
@@ -160,8 +161,48 @@ export default class CategoryProducts extends Component {
         })
       });
   }
+
+  check_if_sufficient_data_added() {
+    var category_name = this.state["selected_category_name"]
+    var product_name = this.state["add-product-name"]
+    var product_description = this.state["add-product-text-description"]
+    var target_image = this.state["product_target_image"]
+    var product_image = this.state["product_image"]
+    var product_video = this.state["add-product-video"]
+    var product_audio = this.state["add-product-audio"]
+    var product_minimum_quantity = this.state["add-product-minimum-quantity"]
+    var product_maximum_quantity = this.state["add-product-maximum-quantity"]
+    var product_discount = this.state["add-product-discount"]
+    var count = 0
+    console.log(category_name, product_name, product_description, target_image, product_image, product_video, product_audio)
+    if (product_description != "Your Product Description.") {
+      count += 1
+    }
+    if (product_image != undefined) {
+      count += 1
+    }
+    if (product_video != undefined) {
+      count += 1
+    }
+    if (product_audio != undefined) {
+      count += 1
+    }
+    if (product_minimum_quantity !=0){
+      count+=1
+    }
+    if (product_maximum_quantity !=0){
+      count+=1
+    }
+    if(product_discount !=0){
+      count+=1
+    }
+    console.log("new count is", count)
+    this.setState({
+      "details-added-count":count
+    })
+  }
   render() {
-    
+
     return (
       <div>
         <div class="header">
@@ -301,12 +342,16 @@ export default class CategoryProducts extends Component {
                                       <tr>
                                         <td className='ml-2'>
                                           <button type="button" class="btn my-5 px-4" style={{ "backgroundColor": "whitesmoke", "color": "#037bff", "outline": "none !importatant" }} onClick={() => {
+                                            var count = this.state["details-added-count"]
+                                            count-=1
                                             this.setState({
                                               "add-details-category-id": 0,
-                                              "add-product-text-description": "Your Product Description."
+                                              "add-product-text-description": "Your Product Description.",
+                                              "details-added-count":count,
                                             })
                                           }}>Cancel</button>
                                           <button type="button" class="btn ml-4 px-4" style={{ "backgroundColor": "#037bff", "color": "white", "outline": "none !importatant" }} onClick={() => {
+                                            this.check_if_sufficient_data_added()
                                             this.setState({
                                               "add-details-category-id": 0,
                                             })
@@ -348,12 +393,16 @@ export default class CategoryProducts extends Component {
                                       <tr>
                                         <td className='ml-2'>
                                           <button type="button" class="btn my-4 px-4" style={{ "backgroundColor": "whitesmoke", "color": "#037bff", "outline": "none !importatant" }} onClick={() => {
+                                            var count = this.state["details-added-count"]
+                                            count-=1
                                             this.setState({
                                               "add-details-category-id": 0,
-                                              product_image_upload_icon_svg: undefined
+                                              product_image_upload_icon_svg: undefined,
+                                              "details-added-count":count
                                             })
                                           }}>Cancel</button>
                                           <button type="button" class="btn ml-4 my-4 px-4" style={{ "backgroundColor": "#037bff", "color": "white", "outline": "none !importatant" }} onClick={() => {
+                                            this.check_if_sufficient_data_added()
                                             this.setState({
                                               "add-details-category-id": 0,
                                             })
@@ -377,7 +426,7 @@ export default class CategoryProducts extends Component {
                                         </td>
                                       </tr>
                                       <tr>
-                                        <video id="video_here" style={{ "width": "100%" }} controls>
+                                        <video id="video_here" style={{ "width": "100%", "maxHeight": "250px" }} controls>
                                           <source />
                                           Your browser does not support HTML5 video.
                                         </video>
@@ -387,13 +436,17 @@ export default class CategoryProducts extends Component {
                                         <td className='ml-5'>
                                           <button type="button" class="btn my-4 ml-4 px-4" style={{ "backgroundColor": "whitesmoke", "color": "#037bff", "outline": "none !importatant" }} onClick={() => {
                                             this.removeVideo();
+                                            var count = this.state["details-added-count"]
+                                            count -= 1
                                             this.setState({
                                               "add-details-category-id": 0,
-                                              "product-video": undefined
+                                              "product-video": undefined,
+                                              "details-added-count":count,
 
                                             })
                                           }}>Cancel</button>
                                           <button type="button" class="btn ml-4 my-4 px-4" style={{ "backgroundColor": "#037bff", "color": "white", "outline": "none !importatant" }} onClick={() => {
+                                            this.check_if_sufficient_data_added()
                                             this.setState({
                                               "add-details-category-id": 0,
                                             })
@@ -430,11 +483,15 @@ export default class CategoryProducts extends Component {
                                       <td className='ml-2'>
                                         <button type="button" class="btn my-4 px-4" style={{ "backgroundColor": "whitesmoke", "color": "#037bff", "outline": "none !importatant" }} onClick={() => {
                                           this.removeAudio();
+                                          var count = this.state["details-added-count"]
+                                          count -= 1
                                           this.setState({
                                             "add-details-category-id": 0,
+                                            "details-added-count":count
                                           })
                                         }}>Cancel</button>
                                         <button type="button" class="btn ml-4 my-4 px-4" style={{ "backgroundColor": "#037bff", "color": "white", "outline": "none !importatant" }} onClick={() => {
+                                          this.check_if_sufficient_data_added()
                                           this.setState({
                                             "add-details-category-id": 0,
                                           })
@@ -468,12 +525,16 @@ export default class CategoryProducts extends Component {
                                       <tr>
                                         <td className='ml-2'>
                                           <button type="button" class="btn my-4 px-4 mt-5" style={{ "backgroundColor": "whitesmoke", "color": "#037bff", "outline": "none !importatant" }} onClick={() => {
+                                            var count = this.state["details-added-count"]
+                                            count-=1
                                             this.setState({
                                               "add-details-category-id": 0,
+                                              "details-added-count": count,
                                             })
                                           }}>Cancel</button>
                                           <button type="button" class="btn ml-4 my-4 px-4 mt-5" style={{ "backgroundColor": "#037bff", "color": "white", "outline": "none !importatant" }} onClick={() => {
-                                            this.setState({
+                                          this.check_if_sufficient_data_added()
+                                          this.setState({
                                               "add-details-category-id": 0,
                                             })
                                           }}>Save</button>
@@ -522,14 +583,18 @@ export default class CategoryProducts extends Component {
                                       <tr>
                                         <td className='ml-2'>
                                           <button type="button" class="btn my-4 px-4" style={{ "backgroundColor": "whitesmoke", "color": "#037bff", "outline": "none !importatant" }} onClick={() => {
+                                            var count=this.state["details-added-count"]
+                                            count-=1
                                             this.setState({
                                               "add-details-category-id": 0,
                                               "add-product-minimum-quantity": 0,
                                               "add-product-maximum-quantity": 0,
                                               "add-product-discount": 0,
+                                              "details-added-count": count,
                                             })
                                           }}>Cancel</button>
                                           <button type="button" class="btn ml-4 my-4 px-4" style={{ "backgroundColor": "#037bff", "color": "white", "outline": "none !importatant" }} onClick={() => {
+                                            this.check_if_sufficient_data_added()
                                             this.setState({
                                               "add-details-category-id": 0,
                                             })
@@ -562,7 +627,7 @@ export default class CategoryProducts extends Component {
                                       <h5>Product Image</h5>
                                     </div>
                                     <div class="carousel-item">
-                                      <video id="video_here" width="100%" controls>
+                                      <video id="video_here" style={{ "width": "100%", "height": "200px" }} controls>
                                         <source />
                                         Your browser does not support HTML5 video.
                                       </video>
@@ -615,12 +680,31 @@ export default class CategoryProducts extends Component {
                             </td>
                           </tr>
                         </table>
-                        <button type="button" data-dismiss="modal" aria-label="Close" class="btn ml-4 px-4" style={{ "backgroundColor": "#037bff", "color": "white", "outline": "none !importatant", "position": "absolute", "bottom": "7px", "right": "30px" }} onClick={() => {
-                          this.setState({
-                            "add-details-category-id": 0,
-                          })
-                          this.post_data_to_server();
-                        }}>Submit</button>
+                        {(() => {
+                          
+                          if (this.state["product_target_image"] == undefined || this.state["add-product-name"] == "Your Product Name." || this.state["details-added-count"] < 1) {
+                            return (
+                              <button type="button" data-dismiss="modal" aria-label="Close" class="btn ml-4 px-4" disabled="true" style={{ "backgroundColor": "#037bff", "color": "white", "outline": "none !importatant", "position": "absolute", "bottom": "7px", "right": "30px" }} onClick={() => {
+                                this.setState({
+                                  "add-details-category-id": 0,
+                                })
+                              }}>Submit</button>
+                            )
+
+                          } else {
+                            return (
+                              <button type="button" data-dismiss="modal" aria-label="Close" class="btn ml-4 px-4" style={{ "backgroundColor": "#037bff", "color": "white", "outline": "none !importatant", "position": "absolute", "bottom": "7px", "right": "30px" }} onClick={() => {
+                                this.setState({
+                                  "add-details-category-id": 0,
+                                })
+                                this.post_data_to_server();
+                              }}>Submit</button>
+                            )
+
+                          }
+
+                        })()}
+
                       </div>
                     </div>
                   </div>

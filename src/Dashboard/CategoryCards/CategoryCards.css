@@ -38,3 +38,6 @@ select{
     border: 0.6px solid rgb(182, 182, 182);
     border-radius: 5px;
 }
+video {
+    object-fit: contain;
+}
