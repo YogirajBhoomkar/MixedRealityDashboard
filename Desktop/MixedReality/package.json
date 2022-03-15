@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "ngx-autosize": "^1.8.7",
+    "react-router-dom": "^6.2.1"
+  }
+}
