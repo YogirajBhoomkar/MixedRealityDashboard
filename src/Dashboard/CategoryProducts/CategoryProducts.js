@@ -13,7 +13,7 @@ export default class CategoryProducts extends Component {
       items: [],
       search_product_name: "",
       "add-details-category-id": 0,
-      "details-added-count":0,
+      "details-added-count": 0,
       "selected_category_name": "category name should come here",
 
       "add-product-name": "Your Product Name.",
@@ -40,7 +40,6 @@ export default class CategoryProducts extends Component {
 
   }
   componentDidMount() {
-
     this.setState({
       selected_category_name: this.props.selected_category_name,
     })
@@ -48,9 +47,6 @@ export default class CategoryProducts extends Component {
     // document.getElementById("target-image-preview").style.backgroundSize = "30px 30px"
     // document.getElementById("product-image-preview").style.backgroundSize = "30px 30px"
     this.getProductList();
-  }
-  getProductList() {
-
   }
   upload_target_image(event, id) {
     var file = event.target.files[0];
@@ -161,7 +157,35 @@ export default class CategoryProducts extends Component {
         })
       });
   }
+  getProductList(){
+    
+  }
+  remove_previous_details(){
+    this.setState({
+      "details-added-count": 0,
 
+      "add-product-name": "Your Product Name.",
+      "target_image_upload_icon_svg": undefined,
+      "product_target_image": undefined,
+
+      "add-product-image-title": "Your Product Image Title.",
+      "product_image_upload_icon_svg": undefined,
+      "product_image": undefined,
+
+      "add-product-video-title": "Your Product Video Title.",
+      "product-video": undefined,
+
+      "add-product-audio-title": "Your Product Audio Title.",
+      "product-audio": undefined,
+
+      "add-product-minimum-quantity": 0,
+      "add-product-maximum-quantity": 0,
+      "add-product-discount": 0,
+
+      "add-product-text-description": "Your Product Description.",
+
+    })
+  }
   check_if_sufficient_data_added() {
     var category_name = this.state["selected_category_name"]
     var product_name = this.state["add-product-name"]
@@ -175,7 +199,7 @@ export default class CategoryProducts extends Component {
     var product_discount = this.state["add-product-discount"]
     var count = 0
     console.log(category_name, product_name, product_description, target_image, product_image, product_video, product_audio)
-    if (product_description != "Your Product Description.") {
+    if (product_description != "Your Product Description." || product_description !="") {
       count += 1
     }
     if (product_image != undefined) {
@@ -187,22 +211,41 @@ export default class CategoryProducts extends Component {
     if (product_audio != undefined) {
       count += 1
     }
-    if (product_minimum_quantity !=0){
-      count+=1
+    if (product_minimum_quantity != 0) {
+      count += 1
     }
-    if (product_maximum_quantity !=0){
-      count+=1
+    if (product_maximum_quantity != 0) {
+      count += 1
     }
-    if(product_discount !=0){
-      count+=1
+    if (product_discount != 0) {
+      count += 1
     }
     console.log("new count is", count)
     this.setState({
-      "details-added-count":count
+      "details-added-count": count
+    })
+  }
+
+  deleteProduct(item, index) {
+    var id = item.Id
+    var category = item.Category
+    var thisRef = this
+    var url = "http://mixed-reality-demo.azurewebsites.net/api/uploaddata/deleteEntry?id=" + id + "&category=" + category;
+    axios.delete(url).then(resp => {
+      if (resp.status == 200) {
+        thisRef.get_updated_list_of_items_from_server();
+      }
+    })
+  }
+  editIterm(item,index){
+    var id=item.Id
+    var category=item.Category
+    var getUrl = "https://localhost:44338/api/uploaddata/getItem?id=" + id + "&category=" + category
+    axios.get(getUrl).then(resp=>{
+      console.log(resp)
     })
   }
   render() {
-
     return (
       <div>
         <div class="header">
@@ -258,7 +301,7 @@ export default class CategoryProducts extends Component {
                                           })
                                         }} />
                                       </div>
-                                      <div className="my-2 mt-5 mb-1 text-left lead">
+                                      <div className="my-4 mt-5 mb-1 text-left lead" style={{ "margin-top": "5vh !important" }}>
                                         <strong>Upload Tracking Image</strong>
                                       </div>
                                       <table className='w-100 mt-3 h-100'>
@@ -343,11 +386,11 @@ export default class CategoryProducts extends Component {
                                         <td className='ml-2'>
                                           <button type="button" class="btn my-5 px-4" style={{ "backgroundColor": "whitesmoke", "color": "#037bff", "outline": "none !importatant" }} onClick={() => {
                                             var count = this.state["details-added-count"]
-                                            count-=1
+                                            count -= 1
                                             this.setState({
                                               "add-details-category-id": 0,
                                               "add-product-text-description": "Your Product Description.",
-                                              "details-added-count":count,
+                                              "details-added-count": count,
                                             })
                                           }}>Cancel</button>
                                           <button type="button" class="btn ml-4 px-4" style={{ "backgroundColor": "#037bff", "color": "white", "outline": "none !importatant" }} onClick={() => {
@@ -366,7 +409,7 @@ export default class CategoryProducts extends Component {
                                   console.log(this.state.product_image_upload_icon_svg)
                                   return (
                                     <table className='w-100 text-left'>
-                                      <tr>
+                                      {/* <tr>
                                         <td style={{ "padding-left": "0px" }}>
                                           <div className="my-3 mx-2 text-left lead">
                                             <strong>Image Title</strong>
@@ -375,13 +418,12 @@ export default class CategoryProducts extends Component {
                                             <input class="form-control mx-2 w-75" aria-describedby="emailHelp" placeholder="Enter image title" value={this.state.new_category_name} onChange={(e) => { this.setState({ "add-product-image-title": e.target.value }) }} />
                                           </div>
                                         </td>
-                                      </tr>
+                                      </tr> */}
                                       <tr>
-                                        <div className="my-2 mt-2 mb-1 text-left lead">
+                                        <div className="my-2 mt-2 mb-5 ml-2 text-left lead" >
                                           <strong>Upload Tracking Image</strong>
                                         </div>
-                                        <div id="product-image-preview" className='border border-primary' style={{ "display": "inline-flex", "flexDirection": "row", "width": "10vw", "height": "20vh", "border-radius": "7px", backgroundImage: `url(${this.state.product_image_upload_icon_svg == undefined ? image_upload_icon_svg : this.state.product_image_upload_icon_svg})`, "backgroundSize": `${this.state.product_image_upload_icon_svg == undefined ? "30px 30px" : "auto 100%"}`, "color": "#037bff !important", "backgroundRepeat": "no-repeat", "background-position": "center center", "fill": "#037bff !important" }}>
-                                          {/* <i style={{ "margin-top": "50%", "color": "#037bff" }} class="fa-solid fa-arrow-up-from-bracket"></i> */}
+                                        <div id="product-image-preview" className='border border-primary mb-2' style={{ "display": "inline-flex", "flexDirection": "row", "width": "10vw", "height": "20vh", "border-radius": "7px", backgroundImage: `url(${this.state.product_image_upload_icon_svg == undefined ? image_upload_icon_svg : this.state.product_image_upload_icon_svg})`, "backgroundSize": `${this.state.product_image_upload_icon_svg == undefined ? "30px 30px" : "auto 100%"}`, "color": "#037bff !important", "backgroundRepeat": "no-repeat", "background-position": "center center", "fill": "#037bff !important" }}>
                                           <input accept="image/*" type='file' name="target-image-input" onChange={
                                             (event) => {
                                               this.upload_target_image(event, "product-image-preview")
@@ -391,14 +433,14 @@ export default class CategoryProducts extends Component {
                                         </div>
                                       </tr>
                                       <tr>
-                                        <td className='ml-2'>
-                                          <button type="button" class="btn my-4 px-4" style={{ "backgroundColor": "whitesmoke", "color": "#037bff", "outline": "none !importatant" }} onClick={() => {
+                                        <td className='ml-5'>
+                                          <button type="button" class="btn my-4 px-4 ml-5" style={{ "backgroundColor": "whitesmoke", "color": "#037bff", "outline": "none !importatant" }} onClick={() => {
                                             var count = this.state["details-added-count"]
-                                            count-=1
+                                            count -= 1
                                             this.setState({
                                               "add-details-category-id": 0,
                                               product_image_upload_icon_svg: undefined,
-                                              "details-added-count":count
+                                              "details-added-count": count
                                             })
                                           }}>Cancel</button>
                                           <button type="button" class="btn ml-4 my-4 px-4" style={{ "backgroundColor": "#037bff", "color": "white", "outline": "none !importatant" }} onClick={() => {
@@ -415,7 +457,7 @@ export default class CategoryProducts extends Component {
                                 else if (this.state['add-details-category-id'] == 3) {
                                   return (
                                     <table className='w-100 text-left'>
-                                      <tr>
+                                      {/* <tr>
                                         <td style={{ "padding-left": "0px" }}>
                                           <div className="mx-2 text-left lead">
                                             <strong>Product Video Title</strong>
@@ -424,7 +466,7 @@ export default class CategoryProducts extends Component {
                                             <input class="form-control mx-2 w-75" aria-describedby="emailHelp" placeholder="Enter product video title" value={this.state.new_category_name} onChange={(e) => { }} />
                                           </div>
                                         </td>
-                                      </tr>
+                                      </tr> */}
                                       <tr>
                                         <video id="video_here" style={{ "width": "100%", "maxHeight": "250px" }} controls>
                                           <source />
@@ -441,7 +483,7 @@ export default class CategoryProducts extends Component {
                                             this.setState({
                                               "add-details-category-id": 0,
                                               "product-video": undefined,
-                                              "details-added-count":count,
+                                              "details-added-count": count,
 
                                             })
                                           }}>Cancel</button>
@@ -460,7 +502,7 @@ export default class CategoryProducts extends Component {
                                 else if (this.state['add-details-category-id'] == 4) {
                                   return (
                                     <table className='w-100 text-left'>
-                                      <tr>
+                                      {/* <tr>
                                         <td style={{ "padding-left": "0px" }}>
                                           <div className="mx-2 my-2 text-left lead">
                                             <strong>Product Audio Title</strong>
@@ -469,25 +511,25 @@ export default class CategoryProducts extends Component {
                                             <input class="form-control mx-2 w-75" aria-describedby="emailHelp" placeholder="Enter product audio title" value={this.state.new_category_name} onChange={(e) => { this.setState({ "add-product-audio-title": e.target.value }) }} />
                                           </div>
                                         </td>
-                                      </tr>
+                                      </tr> */}
                                       <tr>
                                         <td>
-                                          <audio style={{ "width": "20vw" }} id="audio" controls>
+                                          <audio  id="audio" controls>
                                             <source id="src" />
                                           </audio>
-                                          <input className="mt-4" style={{ "opacity": "1" }} type="file" id="upload" onChange={(event) => {
+                                          <input  style={{ "opacity": "1" }} type="file" id="upload" onChange={(event) => {
                                             this.get_product_audio(event);
                                           }} />
                                         </td>
                                       </tr>
-                                      <td className='ml-2'>
-                                        <button type="button" class="btn my-4 px-4" style={{ "backgroundColor": "whitesmoke", "color": "#037bff", "outline": "none !importatant" }} onClick={() => {
+                                      <td className='ml-5'>
+                                        <button type="button" class="btn my-4 px-4 ml-5" style={{ "backgroundColor": "whitesmoke", "color": "#037bff", "outline": "none !importatant" }} onClick={() => {
                                           this.removeAudio();
                                           var count = this.state["details-added-count"]
                                           count -= 1
                                           this.setState({
                                             "add-details-category-id": 0,
-                                            "details-added-count":count
+                                            "details-added-count": count
                                           })
                                         }}>Cancel</button>
                                         <button type="button" class="btn ml-4 my-4 px-4" style={{ "backgroundColor": "#037bff", "color": "white", "outline": "none !importatant" }} onClick={() => {
@@ -526,15 +568,15 @@ export default class CategoryProducts extends Component {
                                         <td className='ml-2'>
                                           <button type="button" class="btn my-4 px-4 mt-5" style={{ "backgroundColor": "whitesmoke", "color": "#037bff", "outline": "none !importatant" }} onClick={() => {
                                             var count = this.state["details-added-count"]
-                                            count-=1
+                                            count -= 1
                                             this.setState({
                                               "add-details-category-id": 0,
                                               "details-added-count": count,
                                             })
                                           }}>Cancel</button>
                                           <button type="button" class="btn ml-4 my-4 px-4 mt-5" style={{ "backgroundColor": "#037bff", "color": "white", "outline": "none !importatant" }} onClick={() => {
-                                          this.check_if_sufficient_data_added()
-                                          this.setState({
+                                            this.check_if_sufficient_data_added()
+                                            this.setState({
                                               "add-details-category-id": 0,
                                             })
                                           }}>Save</button>
@@ -583,8 +625,8 @@ export default class CategoryProducts extends Component {
                                       <tr>
                                         <td className='ml-2'>
                                           <button type="button" class="btn my-4 px-4" style={{ "backgroundColor": "whitesmoke", "color": "#037bff", "outline": "none !importatant" }} onClick={() => {
-                                            var count=this.state["details-added-count"]
-                                            count-=1
+                                            var count = this.state["details-added-count"]
+                                            count -= 1
                                             this.setState({
                                               "add-details-category-id": 0,
                                               "add-product-minimum-quantity": 0,
@@ -619,7 +661,7 @@ export default class CategoryProducts extends Component {
                                 <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                                   <div class="carousel-inner">
                                     <div class="carousel-item active">
-                                      <img class="corousel-img" src={this.state.target_image_upload_icon_svg == undefined ? blank_image : this.state.target_image_upload_icon_svg} style={{ "height": this.state.target_image_upload_icon_svg == undefined ? "100% !important" : "150px", "width": this.state.target_image_upload_icon_svg == undefined ? "auto !important" : "" }} alt="First slide" />
+                                      <img class="corousel-img" src={this.state.target_image_upload_icon_svg == undefined ? blank_image : this.state.target_image_upload_icon_svg} style={{ "height": this.state.target_image_upload_icon_svg == undefined ? "100% !important" : "120px", "width": this.state.target_image_upload_icon_svg == undefined ? "auto !important" : "" }} alt="First slide" />
                                       <h5>Target Image</h5>
                                     </div>
                                     <div class="carousel-item">
@@ -681,7 +723,7 @@ export default class CategoryProducts extends Component {
                           </tr>
                         </table>
                         {(() => {
-                          
+
                           if (this.state["product_target_image"] == undefined || this.state["add-product-name"] == "Your Product Name." || this.state["details-added-count"] < 1) {
                             return (
                               <button type="button" data-dismiss="modal" aria-label="Close" class="btn ml-4 px-4" disabled="true" style={{ "backgroundColor": "#037bff", "color": "white", "outline": "none !importatant", "position": "absolute", "bottom": "7px", "right": "30px" }} onClick={() => {
@@ -698,6 +740,7 @@ export default class CategoryProducts extends Component {
                                   "add-details-category-id": 0,
                                 })
                                 this.post_data_to_server();
+                                this.remove_previous_details();
                               }}>Submit</button>
                             )
 
@@ -763,8 +806,8 @@ export default class CategoryProducts extends Component {
                             <td>{item.MaximumQty}</td>
                             <td>{item.InStock}</td>
                             <td>{item.Price}</td>
-                            <td><i class="fa-solid fa-pen-to-square"></i></td>
-                            <td><i class="fa-solid fa-trash-can"></i></td>
+                            <td onClick={() => { this.editIterm(item,index)}}><i class="fa-solid fa-pen-to-square"></i></td>
+                            <td onClick={() => { this.deleteProduct(item, index) }}><i class="fa-solid fa-trash-can"></i></td>
                             <td><i class="fa-solid fa-upload"></i></td>
                           </tr>
                         )

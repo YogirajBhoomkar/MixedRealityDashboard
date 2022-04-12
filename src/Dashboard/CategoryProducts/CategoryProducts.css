@@ -75,3 +75,12 @@ td{
 #preview-td{
   width: 100% !important;
 }
+#audio{
+  width: 100%;
+}
+.corousel-img{
+  width: 100%;
+}
+#product-image-preview{
+   margin-left: 7vw !important;
+}
