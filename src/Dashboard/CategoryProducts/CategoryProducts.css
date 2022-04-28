@@ -84,3 +84,31 @@ td{
 #product-image-preview{
    margin-left: 7vw !important;
 }
+
+.form-control::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
+            color: #007FFF;
+            opacity: 1; /* Firefox */
+}
+
+.form-control:-ms-input-placeholder { /* Internet Explorer 10-11 */
+            color: #007FFF;
+}
+
+.form-control::-ms-input-placeholder { /* Microsoft Edge */
+            color: #007FFF;
+ }
+ .btn-circle.btn-xl {
+			width: 100px;
+			height: 100px;
+			padding: 13px 18px;
+			border-radius: 60px;
+			font-size: 15px;
+			text-align: center;
+		}
+  button:focus {
+  outline:none;
+  box-shadow: none;
+}
+#buttonTD{
+  width: 1% !important;
+}

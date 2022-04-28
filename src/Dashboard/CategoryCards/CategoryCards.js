@@ -16,21 +16,27 @@ export default class CategoryCards extends Component {
         }
     }
     componentDidMount() {
+        this.get_updated_list_of_categories_from_server();
+
+    }
+    get_updated_list_of_categories_from_server(){
         var thisRef = this;
-        axios.get('https://run.mocky.io/v3/6f72d4bd-3817-41c9-9f0e-cf6cadd4ec06')
+        axios.get(process.env.REACT_APP_ADD_PRODUCT_DATA_POST_URL + '/api/uploaddata/getCategories')
             .then(function (response) {
                 var data = JSON.stringify(response.data)
-                var new_data = JSON.parse(data)
+                var new_data = JSON.parse(data);
+                console.log(new_data.Result);
                 thisRef.setState({
-                    data: new_data
+                    data: new_data.Result
                 })
             })
-
     }
     send_new_category() {
         // POST Request
+        var thisRef = this;
         var data = this.state.data
         var new_category = {
+            "id":"",
             "category-icon": "fas fa-heartbeat",
             "category-name": this.state.new_category_name
         }
@@ -39,6 +45,22 @@ export default class CategoryCards extends Component {
             data: new_data,
             new_category_name: undefined,
             new_category_type: undefined,
+        })
+        const payload = {
+            "category": this.state.new_category_name,
+        }
+        var url=process.env.REACT_APP_ADD_PRODUCT_DATA_POST_URL;
+        axios({
+            method: 'post',
+            url: url + '/api/uploaddata/saveCategory' ,
+            data: payload, 
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(resp => {
+            if (resp.status == 200) {
+                thisRef.get_updated_list_of_categories_from_server();
+            }
         })
 
     }
@@ -87,20 +109,6 @@ export default class CategoryCards extends Component {
                                                                 })
                                                             }} />
                                                         </div>
-                                                        <div class="form-group">
-                                                            <select class="form-select" onChange={(e) => {
-                                                                this.setState({
-                                                                    new_category_type: e.target.value
-                                                                })
-                                                            }}>
-                                                                <option selected value="0">Categories</option>
-                                                                {this.state.data.map((eachCategory) => {
-                                                                    return (
-                                                                        <option value={eachCategory["category-id"]}>{eachCategory["category-name"]}</option>
-                                                                    )
-                                                                })}
-                                                            </select>
-                                                        </div>
                                                         <button class="btn btn-primary px-3" data-dismiss="modal" onClick={() => {
                                                             this.send_new_category()
                                                         }}>Add</button>
@@ -109,11 +117,14 @@ export default class CategoryCards extends Component {
                                             </div>
                                         </div>
                                     </div>
-                                    {this.state.data.map((eachCategory) => {
+                                    
+                                    {
+                                    this.state.data.map((eachCategory) => {
+                                        
                                         return (
                                             <div id="category-card" class="card mx-1 my-3" style={{ "width": "10rem", "height": "auto" }} onClick={() => {
-                                                var selected_category_id = eachCategory["category-id"]
-                                                var show_selected_category_name = eachCategory["category-name"]
+                                                var selected_category_id = eachCategory["Id"]
+                                                var show_selected_category_name = eachCategory["Category"]
                                                 this.setState({
                                                     "selected_category_id": selected_category_id,
                                                     "selected_category_name": show_selected_category_name,
@@ -121,10 +132,11 @@ export default class CategoryCards extends Component {
                                                 })
                                             }}>
                                                 {/* <img class="card-img-top" src="..." alt="Card image cap" /> */}
-                                                <i id="card-icon" class={eachCategory["category-icon"]}></i>
+                                                <i id="card-icon" class={"fa-solid fa-cart-arrow-down"}></i>
                                                 <div class="card-body">
-                                                    <h5 class="card-title align-self-center vertical-align">{eachCategory["category-name"]}</h5>
+                                                    <h5 class="card-title align-self-center vertical-align">{eachCategory["Category"]}</h5>
                                                 </div>
+                                                <button type="button" class="btn btn-light" style={{ "color":"#037bff"}} >Delete</button>
                                             </div>
                                         )
                                     })}
