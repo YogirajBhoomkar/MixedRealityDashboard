@@ -85,7 +85,9 @@ export default class CategoryCards extends Component {
                                 </div>
                                 <div id="cards" className="my-5 mx-5">
                                     <button id="cards-add" class="card mx-1 my-3" data-toggle="modal" data-target="#addnewcategory" style={{ "width": "10rem" }}>
-                                        <i id="card-icon" style={{ "margin-left": "40%", "margin-right": "auto" }} class="fa-solid fa-plus"></i>
+                                        <div style={{"marginLeft":"40%","marginTop":"15%"}}>
+                                            <i id="card-icon" style={{ "text-align":"center","vertical-align": "bottom" }} class="fa-solid fa-plus"></i>
+                                        </div>
                                         <div class="card-body">
                                             <h6 style={{ "text-align": "center" }} class="card-title align-self-center vertical-align">Add Category</h6>
                                         </div>
@@ -120,9 +122,8 @@ export default class CategoryCards extends Component {
                                     
                                     {
                                     this.state.data.map((eachCategory) => {
-                                        
                                         return (
-                                            <div id="category-card" class="card mx-1 my-3" style={{ "width": "10rem", "height": "auto" }} onClick={() => {
+                                            <div id="category-card" class="card shadow mx-3 my-3" style={{ "width": "10rem", "height": "auto", "border":"0px solid transparent" }} onClick={() => {
                                                 var selected_category_id = eachCategory["Id"]
                                                 var show_selected_category_name = eachCategory["Category"]
                                                 this.setState({

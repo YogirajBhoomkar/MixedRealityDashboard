@@ -114,6 +114,31 @@ export default class CategoryProducts extends Component {
   // removeAudio() {
   //   document.getElementById("audio").setAttribute("src", "");
   // }
+  editItem(item, index) {
+    var id = item.Id
+    var category = item.Category
+    var getUrl = process.env.REACT_APP_ADD_PRODUCT_DATA_POST_URL + "/api/uploaddata/getItem?id=" + id + "&category=" + category
+    axios.get(getUrl).then(resp => {
+      console.log("The Data is :", resp.data);
+      this.setState({
+        "add-product-name": resp.data.productName,
+        "selected_category_name": resp.data.category,
+        "add-product-text-description": resp.data.description,
+        "tracking_image_upload_icon_svg": resp.data.targetImage,
+        "product_tracking_image": resp.data.targetImage,
+        "product_image": resp.data.promoImage,
+        "product_image_upload_icon_svg": resp.data.promoImage,
+        "product_video": resp.data.video,
+        "product-video-file-url": resp.data.video,
+        "product_audio": resp.data.audio,
+        "product-audio-file-url": resp.data.audio,
+        "add-product-minimum-quantity": resp.data.minimumQty,
+        "add-product-maximum-quantity": resp.data.maximumQty,
+        "add-product-price": resp.data.price,
+        "add-product-id": resp.data.id,
+      })
+    })
+  }
   post_data_to_server(postOredit) {
     var thisRef = this;
     var category_name = this.state["selected_category_name"]
@@ -220,31 +245,7 @@ export default class CategoryProducts extends Component {
       }
     })
   }
-  editItem(item, index) {
-    var id = item.Id
-    var category = item.Category
-    var getUrl = process.env.REACT_APP_ADD_PRODUCT_DATA_POST_URL+"/api/uploaddata/getItem?id=" + id + "&category=" + category
-    axios.get(getUrl).then(resp => {
-      console.log(resp.data);
-      this.setState({
-        "add-product-name": resp.data.productName,
-        "selected_category_name": resp.data.category,
-        "add-product-text-description": resp.data.description,
-        "tracking_image_upload_icon_svg": resp.data.targetImage,
-        "tracking_image": resp.data.targetImage,
-        "product_image": resp.data.promoImage,
-        "product_image_upload_icon_svg": resp.data.promoImage,
-        "product_video": resp.data.video,
-        "product-video-file-url":resp.data.video,
-        "product_audio": resp.data.audio,
-        "product-audio-file-url":resp.data.audio,
-        "add-product-minimum-quantity": resp.data.minimumQty,
-        "add-product-maximum-quantity": resp.data.maximumQty,
-        "add-product-price":resp.data.price ,
-        "add-product-id":resp.data.id,
-      })
-    })
-  }
+ 
   publishProduct(item){
     var thisRef=this;
     axios({
@@ -278,7 +279,7 @@ export default class CategoryProducts extends Component {
     var category_name = this.state["selected_category_name"]
     var product_name = this.state["add-product-name"]
     var product_description = this.state["add-product-text-description"]
-    var target_image = this.state["product_target_image"]
+    var target_image = this.state["product-tracking-image"]
     var product_image = this.state["product_image"]
     var product_video = this.state["add-product-video"]
     var product_audio = this.state["add-product-audio"]
@@ -739,10 +740,10 @@ export default class CategoryProducts extends Component {
           </table>
           <table class="table table-bordered table-responsive">
             <thead>
-              <th class="text-center"  >Product Image</th>
-              <th  class="text-center"  >Product Name</th>
-              <th  class="text-center" >Date Added</th>
-              <th  class="text-center"> Scans</th>
+              <th class="text-center col-md-1"   >Product Image</th>
+              <th class="text-center col-md-1"  >Product Name</th>
+              <th class="text-center col-md-2" >Date Added</th>
+              <th class="text-center col-md-6"> Scans</th>
               <th  >Min. Qty.</th>
               <th  >Max. Qty</th>
               <th  class="text-center">In Stock</th>
@@ -760,7 +761,7 @@ export default class CategoryProducts extends Component {
                       (item, index) => {
                           return (
                             <tr scope="row" style={{ "backgroundColor": item.Publish == "true" ? "whitesmoke" : "transparent" }}>
-                              <td style={{ "width": "100px !important" }}>{item.PromoImage}</td>
+                              <td><img style={{ "height": "50px", "auto": "auto" }} src={item.PromoImage} onerror={blank_image}></img></td>
                               <td style={{ "width": "100px !important" }}>{item.ProductName}</td>
                               <td style={{ "width": "100px !important" }}>{String(item.DateTime).split("T")[0]}</td>
                               <td>{Math.floor(Math.random() * 10000)}</td>
@@ -768,9 +769,9 @@ export default class CategoryProducts extends Component {
                               <td>{item.MaximumQty}</td>
                               <td>{item.InStock}</td>
                               <td>{item.Price}</td>
-                              <td><i class="fa-solid fa-pen-to-square"></i></td>
-                              <td><i class="fa-solid fa-trash-can"></i></td>
-                              <td><i class="fa-solid fa-upload"></i></td>
+                              <td><i class="fa-solid fa-pen-to-square" style={{ "color": item.Publish == "true" ? "whitesmoke" : "transparent" }}></i></td>
+                              <td><button style={{ "border": 0, "outline": "none", "backgroundColor": "transparent" }} onClick={() => { this.deleteProduct(item, index) }}><i class="fa-solid fa-trash-can"></i></button></td>
+                              <td><button style={{ "border": 0, "outline": "none", "backgroundColor": "transparent" }} onClick={() => { this.publishProduct(item) }}><i class="fa-solid fa-upload"></i></button></td>
                             </tr>
                           )                        
                       })
@@ -791,7 +792,7 @@ export default class CategoryProducts extends Component {
                               <td>{item.MaximumQty}</td>
                               <td>{item.InStock}</td>
                               <td>{item.Price}</td>
-                              <td> <button style={{ "border": 0, "outline": "none", "backgroundColor": "white" }} data-toggle="modal" data-target="#editItem" onClick={() => { this.editItem(item, index) }} ><i class="fa-solid fa-pen-to-square"></i></button></td>
+                              <td> <button style={{ "border": 0, "outline": "none", "backgroundColor": "transparent" }} data-toggle="modal" data-target="#editItem" onClick={() => { this.editItem(item, index) }} ><i class="fa-solid fa-pen-to-square"></i></button></td>
                               <div class="modal fade bd-example-modal-lg" data-keyboard="false" data-backdrop="static" id="editItem" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                                 <div className="modal-dialog modal-lg modal-dialog-centered" role="document">
                                   <div className="modal-content" id="guidedTour-modal">
@@ -1173,9 +1174,8 @@ export default class CategoryProducts extends Component {
                                   </div>
                                 </div>
                               </div>
-
-                              <td><button style={{ "border": 0, "outline": "none", "backgroundColor": "white" }} onClick={() => { this.deleteProduct(item, index) }}><i class="fa-solid fa-trash-can"></i></button></td>
-                              <td><button style={{ "border": 0, "outline": "none", "backgroundColor": "white" }} onClick={() => { this.publishProduct(item) }}><i class="fa-solid fa-upload"></i></button></td>
+                              <td><button style={{ "border": 0, "outline": "none", "backgroundColor": "transparent" }} onClick={() => { this.deleteProduct(item, index) }}><i class="fa-solid fa-trash-can"></i></button></td>
+                              <td><button style={{ "border": 0, "outline": "none", "backgroundColor": "transparent" }} onClick={() => { this.publishProduct(item) }}><i class="fa-solid fa-upload"></i></button></td>
                             </tr>
                           )
                         })
